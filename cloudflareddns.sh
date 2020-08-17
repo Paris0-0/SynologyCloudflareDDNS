@@ -3,19 +3,24 @@ set -e;
 
 ipv4Regex="((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])"
 
-proxy="true"
+# DNS是否Proxy
+proxy="false"
 
 # DSM Config
 username="$1"
 password="$2"
 hostname="$3"
-ipAddr="$4"
+# ipAddr="$4"
+# 不用系统提供的地址，直接curl获取
+ipAddr="$(curl -s http://v6.ip.zxinc.org/getip)"
 
-if [[ $ipAddr =~ $ipv4Regex ]]; then
-    recordType="A";
-else
-    recordType="AAAA";
-fi
+#if [[ $ipAddr =~ $ipv4Regex ]]; then
+#    recordType="A";
+#else
+#    recordType="AAAA";
+#fi
+
+recordType="AAAA";
 
 listDnsApi="https://api.cloudflare.com/client/v4/zones/${username}/dns_records?type=${recordType}&name=${hostname}"
 createDnsApi="https://api.cloudflare.com/client/v4/zones/${username}/dns_records"
